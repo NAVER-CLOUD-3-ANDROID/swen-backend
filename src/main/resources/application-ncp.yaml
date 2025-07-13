@@ -1,0 +1,57 @@
+# NCP 운영 환경 설정
+external-api:
+  naver:
+    news:
+      client-id: ${NAVER_CLIENT_ID}
+      client-secret: ${NAVER_CLIENT_SECRET}
+      base-url: "https://openapi.naver.com"
+    
+    hyperclova:
+      api-key: ${NAVER_HYPERCLOVA_API_KEY}
+      api-key-primary: ${NAVER_HYPERCLOVA_API_KEY_PRIMARY}
+      api-gateway-url: ${NAVER_HYPERCLOVA_API_GATEWAY_URL}
+      request-id: ${NAVER_HYPERCLOVA_REQUEST_ID:X-NCP-CLOVASTUDIO-REQUEST-ID}
+
+# NCP Cloud DB for MySQL 설정
+database:
+  mysql:
+    host: ${NCP_DB_HOST}
+    port: ${NCP_DB_PORT:3306}
+    name: ${NCP_DB_NAME}
+    username: ${NCP_DB_USERNAME}
+    password: ${NCP_DB_PASSWORD}
+    
+  hikari:
+    maximum-pool-size: 20
+    minimum-idle: 5
+    connection-timeout: 30000
+    idle-timeout: 600000
+    max-lifetime: 1800000
+
+# 운영 환경 로깅 (에러 중심)
+logging:
+  level:
+    root: INFO
+    com.swen: INFO
+    org.jetbrains.exposed: WARN
+    io.ktor: INFO
+
+# NCP 특화 설정
+ncp:
+  region: ${NCP_REGION:KR}
+  
+  # Object Storage 설정 (음성 파일 저장용)
+  object-storage:
+    endpoint: ${NCP_OBJECT_STORAGE_ENDPOINT}
+    access-key: ${NCP_ACCESS_KEY}
+    secret-key: ${NCP_SECRET_KEY}
+    bucket-name: ${NCP_BUCKET_NAME:news-audio-files}
+  
+  # Cloud Functions 설정 (필요 시)
+  cloud-functions:
+    endpoint: ${NCP_CLOUD_FUNCTIONS_ENDPOINT}
+    
+  # VPC 설정
+  vpc:
+    private-subnet: ${NCP_PRIVATE_SUBNET}
+    security-group: ${NCP_SECURITY_GROUP}
