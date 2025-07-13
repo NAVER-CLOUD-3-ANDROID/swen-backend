@@ -14,7 +14,7 @@ class NaverNewsClient(
 ) {
     
     suspend fun searchNews(
-        query: String = "최신뉴스",
+        query: String? = null,
         display: Int = 10,
         start: Int = 1,
         sort: String = "date"
@@ -23,7 +23,10 @@ class NaverNewsClient(
             val response = httpClient.get("https://openapi.naver.com/v1/search/news.json") {
                 header("X-Naver-Client-Id", clientId)
                 header("X-Naver-Client-Secret", clientSecret)
-                parameter("query", query)
+                
+                // query가 null이 아닐 때만 파라미터 추가
+                query?.let { parameter("query", it) }
+                
                 parameter("display", display)
                 parameter("start", start)
                 parameter("sort", sort)
@@ -37,7 +40,6 @@ class NaverNewsClient(
                         content = item.description.removeHtmlTags(),
                         url = item.link,
                         publishedAt = item.pubDate,
-                        category = "일반"
                     )
                 }
             } else {

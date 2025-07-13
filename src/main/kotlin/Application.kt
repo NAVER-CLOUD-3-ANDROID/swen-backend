@@ -9,12 +9,13 @@ import io.ktor.server.response.respondText
 import io.ktor.server.response.respond
 import infrastructure.config.DependencyInjection
 import infrastructure.config.*
-import presentation.dto.NewsResponse
+import presentation.dto.NewsData
+import presentation.routing.newsRouting
 
 fun main() {
     // Profile 기반 설정 로딩
     val profile = System.getenv("APP_PROFILE") ?: "local"
-    println("🚀 Starting application with profile: $profile")
+    println("Starting application with profile: $profile")
     
     embeddedServer(Netty, port = System.getenv("PORT")?.toInt() ?: 8080) {
         val di = DependencyInjection(this)
@@ -69,8 +70,11 @@ fun main() {
             
             get("/test/naver-news") {
                 try {
-                    val news = di.naverNewsClient.searchNews("최신뉴스", 3)
-                    val responses = news.map { NewsResponse.from(it) }
+                    val news = di.naverNewsClient.searchNews(
+                        query = null,  // 기본값 사용
+                        display = 3
+                    )
+                    val responses = news.map { NewsData.from(it) }
                     call.respond(responses)
                 } catch (e: Exception) {
                     call.respondText("Error: ${e.message}")
@@ -93,6 +97,9 @@ fun main() {
                     call.respondText("Error: ${e.message}")
                 }
             }
+            
+            // 뉴스 라우팅 추가
+            newsRouting(di.generateNewsWithScriptUseCase)
         }
         
         // 애플리케이션 종료 시 리소스 정리
@@ -100,7 +107,7 @@ fun main() {
             di.cleanup()
         }
         
-        println("✅ Application started successfully on profile: $profile")
+        println("Application started successfully on profile: $profile")
     }.start(wait = true)
 }
 

@@ -1,5 +1,6 @@
 package infrastructure.config
 
+import application.usecase.GenerateNewsWithScriptUseCase
 import infrastructure.external.NaverHyperclovaClient
 import infrastructure.external.NaverNewsClient
 import io.ktor.server.application.*
@@ -24,17 +25,11 @@ class DependencyInjection(private val application: Application) {
         config = appConfig.externalApi.naver.hyperclova
     )
     
-    // TODO: Repository 구현체들 추가 (MySQL 연결 후)
-    // val newsRepository = NewsRepositoryImpl(database)
-    // val newsScriptRepository = NewsScriptRepositoryImpl(database)
-    
-    // TODO: Service 초기화 (Repository 구현 후)
-    // val newsService = NewsService(newsRepository, newsScriptRepository)
-    
-    // TODO: Use Cases 초기화 (Service 구현 후)
-    // val collectNewsUseCase = CollectNewsUseCase(naverNewsClient, newsService)
-    // val generateScriptUseCase = GenerateScriptUseCase(naverHyperclovaClient, newsService, newsRepository)
-    // val getRandomNewsUseCase = GetRandomNewsUseCase(newsService)
+    // 활성화된 UseCase
+    val generateNewsWithScriptUseCase = GenerateNewsWithScriptUseCase(
+        naverNewsClient = naverNewsClient,
+        naverHyperclovaClient = naverHyperclovaClient
+    )
     
     fun cleanup() {
         httpClient.close()
