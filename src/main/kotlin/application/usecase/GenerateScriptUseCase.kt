@@ -3,10 +3,10 @@ package application.usecase
 import domain.news.entity.NewsScript
 import domain.news.service.NewsService
 import domain.news.repository.NewsRepository
-import infrastructure.external.LLMClient
+import infrastructure.external.NaverHyperclovaClient
 
 class GenerateScriptUseCase(
-    private val llmClient: LLMClient,
+    private val naverHyperclovaClient: NaverHyperclovaClient,
     private val newsService: NewsService,
     private val newsRepository: NewsRepository
 ) {
@@ -15,8 +15,8 @@ class GenerateScriptUseCase(
         // 1. 뉴스 기사 조회
         val article = newsRepository.findById(newsId) ?: return null
         
-        // 2. LLM을 통해 스크립트 생성
-        val script = llmClient.generateNewsScript(article)
+        // 2. 하이퍼클로바를 통해 스크립트 생성
+        val script = naverHyperclovaClient.generateNewsScript(article)
         
         // 3. 생성된 스크립트 저장
         return newsService.generateAndSaveScript(newsId, script)
@@ -32,8 +32,8 @@ class GenerateScriptUseCase(
             return Pair(article.title, existingScript)
         }
         
-        // 3. 스크립트 생성
-        val script = llmClient.generateNewsScript(article)
+        // 3. 하이퍼클로바로 스크립트 생성
+        val script = naverHyperclovaClient.generateNewsScript(article)
         val savedScript = newsService.generateAndSaveScript(article.id, script)
         
         return Pair(article.title, savedScript)

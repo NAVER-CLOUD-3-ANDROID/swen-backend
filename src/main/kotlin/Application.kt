@@ -8,6 +8,7 @@ import io.ktor.server.routing.get
 import io.ktor.server.response.respondText
 import io.ktor.server.response.respond
 import infrastructure.config.DependencyInjection
+import infrastructure.config.*
 import presentation.dto.NewsResponse
 
 fun main() {
@@ -21,7 +22,6 @@ fun main() {
         configureHTTP()
         configureMonitoring()
         configureSerialization()
-        configureRouting()
         
         // 임시 테스트 라우팅
         routing {
@@ -108,5 +108,4 @@ fun Application.module() {
     configureHTTP()
     configureMonitoring()
     configureSerialization()
-    configureRouting()
 }
