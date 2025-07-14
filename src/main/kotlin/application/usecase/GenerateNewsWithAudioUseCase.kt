@@ -69,8 +69,8 @@ class GenerateNewsWithAudioUseCase(
                 return NewsWithAudioResult.failure("'$keyword' 관련 뉴스를 찾을 수 없습니다.")
             }
             
-            // 2. 최신 뉴스 선택
-            val latestNews = newsArticles.first()
+            // 2. 최신 뉴스 중 랜덤 선택
+            val latestNews = newsArticles.random()
             
             // 3. 스크립트 생성
             val scriptContent = naverHyperclovaClient.generateNewsScript(latestNews)
