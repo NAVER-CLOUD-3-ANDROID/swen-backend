@@ -11,13 +11,18 @@ external-api:
       api-key-primary: ${NAVER_HYPERCLOVA_API_KEY_PRIMARY}
       api-gateway-url: ${NAVER_HYPERCLOVA_API_GATEWAY_URL}
       request-id: ${NAVER_HYPERCLOVA_REQUEST_ID:X-NCP-CLOVASTUDIO-REQUEST-ID}
+    
+    clova-dubbing:
+      base-url: ${NCP_TTS_BASE_URL}
+      api-key-id: ${NCP_ACCESS_KEY}
+      api-key: ${NCP_SECRET_KEY}
 
 # 로컬 MySQL 설정
 database:
   mysql:
     host: ${DB_HOST:localhost}
     port: ${DB_PORT:3306}
-    name: ${DB_NAME:news_db}
+    name: ${DB_NAME:swen}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD}
     
