@@ -36,6 +36,11 @@ data class AppConfig(
                             apiKeyPrimary = config.property("external-api.naver.hyperclova.api-key-primary").getString(),
                             apiGatewayUrl = config.property("external-api.naver.hyperclova.api-gateway-url").getString(),
                             requestId = config.property("external-api.naver.hyperclova.request-id").getString()
+                        ),
+                        clovaDubbing = NaverClovaDubbingConfig(
+                            baseUrl = config.property("external-api.naver.clova-dubbing.base-url").getString(),
+                            apiKeyId = config.property("external-api.naver.clova-dubbing.api-key-id").getString(),
+                            apiKey = config.property("external-api.naver.clova-dubbing.api-key").getString()
                         )
                     )
                 ),
@@ -88,7 +93,8 @@ data class ExternalApiConfig(
 
 data class NaverApiConfig(
     val news: NaverNewsConfig,
-    val hyperclova: NaverHyperclovaConfig
+    val hyperclova: NaverHyperclovaConfig,
+    val clovaDubbing: NaverClovaDubbingConfig
 )
 
 data class NaverNewsConfig(
@@ -150,4 +156,10 @@ data class NCPCloudFunctionsConfig(
 data class NCPVPCConfig(
     val privateSubnet: String?,
     val securityGroup: String?
+)
+
+data class NaverClovaDubbingConfig(
+    val baseUrl: String,
+    val apiKeyId: String,
+    val apiKey: String
 )

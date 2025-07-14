@@ -81,25 +81,62 @@ fun main() {
                 }
             }
             
-            get("/test/hyperclova") {
+            get("/test/tts") {
                 try {
-                    // 테스트용 더미 뉴스
-                    val testNews = domain.news.entity.NewsArticle.create(
-                        title = "테스트 뉴스",
-                        content = "이것은 하이퍼클로바 API 테스트를 위한 샘플 뉴스입니다. 네이버의 하이퍼클로바가 이 내용을 자연스러운 음성 스크립트로 변환할 예정입니다.",
-                        url = "https://test.com",
-                        publishedAt = "2025-01-01"
+                    // 테스트용 스크립트
+                    val testScript = "안녕하세요. 이것은 네이버 클로바 더빙 API 테스트입니다. 음성이 정상적으로 생성되는지 확인해보겠습니다."
+                    
+                    val speech = di.ttsService.generateSpeechFromScript(
+                        scriptId = "test-script-001",
+                        scriptText = testScript,
+                        speaker = "nara"
                     )
                     
-                    val script = di.naverHyperclovaClient.generateNewsScript(testNews)
-                    call.respondText("생성된 스크립트:\n\n$script")
+                    call.respondText("""
+                        🎵 TTS 생성 완료!
+                        
+                        - Speech ID: ${speech.id}
+                        - Script ID: ${speech.scriptId}
+                        - Speaker: ${speech.speaker}
+                        - Status: ${speech.status}
+                        - Audio URL: ${speech.audioUrl}
+                        
+                        🎧 재생 테스트: GET /api/news/audio/${speech.id}
+                    """.trimIndent())
                 } catch (e: Exception) {
-                    call.respondText("Error: ${e.message}")
+                    call.respondText("TTS 테스트 실패: ${e.message}")
+                }
+            }
+            
+            get("/test/news-with-audio") {
+                try {
+                    val result = di.generateNewsWithAudioUseCase.executeRandom("nara")
+                    
+                    if (result.success && result.speech != null) {
+                        call.respondText("""
+                            🎉 뉴스 + 오디오 생성 완료!
+                            
+                            뉴스: ${result.news?.title}
+                            스크립트 ID: ${result.script?.id}
+                            오디오 ID: ${result.speech.id}
+                            오디오 URL: /api/news/audio/${result.speech.id}
+                            
+                            상태: ${result.speech.status}
+                        """.trimIndent())
+                    } else {
+                        call.respondText("뉴스 오디오 생성 실패: ${result.error}")
+                    }
+                } catch (e: Exception) {
+                    call.respondText("테스트 실패: ${e.message}")
                 }
             }
             
             // 뉴스 라우팅 추가
-            newsRouting(di.generateNewsWithScriptUseCase)
+            newsRouting(
+                generateNewsWithScriptUseCase = di.generateNewsWithScriptUseCase,
+                generateNewsWithAudioUseCase = di.generateNewsWithAudioUseCase,
+                ttsService = di.ttsService
+            )
         }
         
         // 애플리케이션 종료 시 리소스 정리

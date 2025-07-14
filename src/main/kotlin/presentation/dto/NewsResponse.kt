@@ -2,6 +2,7 @@ package presentation.dto
 
 import domain.news.entity.NewsArticle
 import domain.news.entity.NewsScript
+import domain.tts.entity.Speech
 import kotlinx.serialization.Serializable
 
 // 통합 API 응답
@@ -13,11 +14,29 @@ data class NewsResponse(
     val error: String? = null
 )
 
+// 뉴스 + 스크립트 + 오디오 응답
+@Serializable
+data class NewsWithAudioResponse(
+    val success: Boolean,
+    val message: String,
+    val data: NewsWithAudioData? = null,
+    val error: String? = null
+)
+
 // 뉴스 + 스크립트 데이터
 @Serializable
 data class NewsWithScriptData(
     val news: NewsData,
     val script: NewsScriptData,
+    val processingTime: Long // 처리 시간 (밀리초)
+)
+
+// 뉴스 + 스크립트 + 오디오 데이터
+@Serializable
+data class NewsWithAudioData(
+    val news: NewsData,
+    val script: NewsScriptData,
+    val audio: SpeechData,
     val processingTime: Long // 처리 시간 (밀리초)
 )
 
@@ -71,8 +90,34 @@ data class NewsScriptData(
     }
 }
 
+// TTS 음성 데이터
+@Serializable
+data class SpeechData(
+    val id: String,
+    val scriptId: String,
+    val audioUrl: String,
+    val speaker: String,
+    val status: String,
+    val createdAt: String
+) {
+    companion object {
+        fun from(speech: Speech): SpeechData {
+            return SpeechData(
+                id = speech.id,
+                scriptId = speech.scriptId,
+                audioUrl = speech.audioUrl ?: "",
+                speaker = speech.speaker,
+                status = speech.status.name,
+                createdAt = speech.createdAt.toString()
+            )
+        }
+    }
+}
+
 // 요청 DTO들
 @Serializable
 data class KeywordNewsRequest(
-    val keyword: String
+    val keyword: String,
+    val includeAudio: Boolean = false,
+    val speaker: String = "nara"
 )

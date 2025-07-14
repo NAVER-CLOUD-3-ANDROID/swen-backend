@@ -11,6 +11,11 @@ external-api:
       api-key-primary: ${NAVER_HYPERCLOVA_API_KEY_PRIMARY}
       api-gateway-url: ${NAVER_HYPERCLOVA_API_GATEWAY_URL}
       request-id: ${NAVER_HYPERCLOVA_REQUEST_ID:X-NCP-CLOVASTUDIO-REQUEST-ID}
+    
+    clova-dubbing:
+      base-url: ${NCP_TTS_BASE_URL}
+      api-key-id: ${NCP_ACCESS_KEY}
+      api-key: ${NCP_SECRET_KEY}
 
 # NCP Cloud DB for MySQL 설정
 database:
