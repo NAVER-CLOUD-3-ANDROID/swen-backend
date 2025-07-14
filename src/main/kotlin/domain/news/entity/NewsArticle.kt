@@ -10,7 +10,6 @@ data class NewsArticle(
     val url: String,
     val summary: String? = null,
     val publishedAt: String,
-    val category: String? = null,
     val imageUrl: String? = null
 ) {
     companion object {
@@ -19,7 +18,6 @@ data class NewsArticle(
             content: String,
             url: String,
             publishedAt: String,
-            category: String? = null,
             imageUrl: String? = null
         ): NewsArticle {
             return NewsArticle(
@@ -28,7 +26,6 @@ data class NewsArticle(
                 content = content,
                 url = url,
                 publishedAt = publishedAt,
-                category = category,
                 imageUrl = imageUrl
             )
         }

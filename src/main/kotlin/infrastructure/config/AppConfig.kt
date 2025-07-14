@@ -1,7 +1,6 @@
 package infrastructure.config
 
 import io.ktor.server.application.*
-import io.ktor.server.config.*
 
 data class AppConfig(
     val profile: String,

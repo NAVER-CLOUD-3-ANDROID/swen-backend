@@ -4,35 +4,52 @@ import domain.news.entity.NewsArticle
 import domain.news.entity.NewsScript
 import kotlinx.serialization.Serializable
 
+// 통합 API 응답
 @Serializable
 data class NewsResponse(
+    val success: Boolean,
+    val message: String,
+    val data: NewsWithScriptData? = null,
+    val error: String? = null
+)
+
+// 뉴스 + 스크립트 데이터
+@Serializable
+data class NewsWithScriptData(
+    val news: NewsData,
+    val script: NewsScriptData,
+    val processingTime: Long // 처리 시간 (밀리초)
+)
+
+// 뉴스 데이터
+@Serializable
+data class NewsData(
     val id: String,
     val title: String,
     val content: String,
     val url: String,
     val summary: String?,
     val publishedAt: String,
-    val category: String?,
     val imageUrl: String?
 ) {
     companion object {
-        fun from(article: NewsArticle): NewsResponse {
-            return NewsResponse(
+        fun from(article: NewsArticle): NewsData {
+            return NewsData(
                 id = article.id,
                 title = article.title,
                 content = article.content,
                 url = article.url,
                 summary = article.summary,
                 publishedAt = article.publishedAt,
-                category = article.category,
                 imageUrl = article.imageUrl
             )
         }
     }
 }
 
+// 스크립트 데이터
 @Serializable
-data class NewsScriptResponse(
+data class NewsScriptData(
     val id: String,
     val newsId: String,
     val script: String,
@@ -41,8 +58,8 @@ data class NewsScriptResponse(
     val createdAt: String
 ) {
     companion object {
-        fun from(script: NewsScript): NewsScriptResponse {
-            return NewsScriptResponse(
+        fun from(script: NewsScript): NewsScriptData {
+            return NewsScriptData(
                 id = script.id,
                 newsId = script.newsId,
                 script = script.script,
@@ -54,19 +71,8 @@ data class NewsScriptResponse(
     }
 }
 
+// 요청 DTO들
 @Serializable
-data class RandomNewsResponse(
-    val news: NewsResponse,
-    val script: NewsScriptResponse?
-)
-
-@Serializable
-data class CollectNewsRequest(
-    val query: String = "최신뉴스",
-    val count: Int = 10
-)
-
-@Serializable
-data class GenerateScriptRequest(
-    val newsId: String
+data class KeywordNewsRequest(
+    val keyword: String
 )
